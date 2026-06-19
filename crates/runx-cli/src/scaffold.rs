@@ -273,11 +273,11 @@ fn default_home_runx_dir() -> PathBuf {
 }
 
 fn scaffold_cli_package_version() -> String {
-    env::var("RUNX_CLI_PACKAGE_VERSION").unwrap_or_else(|_| "^0.5.22".to_owned())
+    env::var("RUNX_CLI_PACKAGE_VERSION").unwrap_or_else(|_| "^0.6.2".to_owned())
 }
 
 fn scaffold_authoring_package_version() -> String {
-    env::var("RUNX_AUTHORING_PACKAGE_VERSION").unwrap_or_else(|_| "^0.1.4".to_owned())
+    env::var("RUNX_AUTHORING_PACKAGE_VERSION").unwrap_or_else(|_| "^0.2.0".to_owned())
 }
 
 #[derive(Serialize)]
