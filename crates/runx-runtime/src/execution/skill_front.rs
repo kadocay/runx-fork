@@ -36,6 +36,7 @@ mod runner_manifest;
 
 #[cfg(feature = "cli-tool")]
 pub(crate) use self::graph::SkillRunGraphAdapter;
+pub(crate) use self::graph::graph_domain_act_receipt;
 pub(crate) use self::inline_harness::run_inline_harness_with_effects;
 
 use self::agent::execute_agent_skill_run;

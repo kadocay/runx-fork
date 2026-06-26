@@ -12,7 +12,7 @@ pub(crate) struct OfficialSkillLockEntry {
 pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     OfficialSkillLockEntry {
         skill_id: "runx/agency",
-        version: "sha-f53e65733d67",
+        version: "sha-44dc0575da43",
         digest: "cc47b9574d8aeddc679dc08ca983702e7a75c576ce04fb5bc50b63c7541747c8",
     },
     OfficialSkillLockEntry {
@@ -37,7 +37,7 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/data-store",
-        version: "sha-413e44a73be2",
+        version: "sha-4b5c8438cb5a",
         digest: "5af0e2dd3dd2116874e4fb886e0424f4b944c136b3430a10c31e400a0249113b",
     },
     OfficialSkillLockEntry {
@@ -137,8 +137,8 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/ledger",
-        version: "sha-7c6f3e865af7",
-        digest: "6845a268b5b5b8bd2e0e73ec7dbdd8079fab88c6c0b47e0f169f89784051c3f5",
+        version: "sha-3e6341beba7f",
+        digest: "f91e656d6fcef27dec6e12725c8015be47762514278f37342ff40761838e9f6c",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/messageboard",
@@ -202,7 +202,7 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/ops-desk",
-        version: "sha-38eb0b2e2b09",
+        version: "sha-a2f4840047ee",
         digest: "f32f21b6ed6c03f5623bc98f2823365ebcabc721cedf64e8a67c556613a35f59",
     },
     OfficialSkillLockEntry {
@@ -242,7 +242,7 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/refund",
-        version: "sha-6a4a0fd434a4",
+        version: "sha-4271ef5da656",
         digest: "1295dd1950b137f828319d3d56491241ba8629c56ede9e50a736e61e96dd1a9a",
     },
     OfficialSkillLockEntry {
@@ -282,8 +282,8 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/settle-invoice",
-        version: "sha-00b332e80b1f",
-        digest: "34143f33165cf06f4336eef3e7d39a59d8b7a23fec51154f35e42b81847acb5f",
+        version: "sha-dff8399d530f",
+        digest: "f016ad099d4777d37e06bd3ca5412293166bee4fa15fba8eba1ffab77f729246",
     },
     OfficialSkillLockEntry {
         skill_id: "runx/sign-receipt",
@@ -312,7 +312,7 @@ pub(crate) const OFFICIAL_SKILLS: &[OfficialSkillLockEntry] = &[
     },
     OfficialSkillLockEntry {
         skill_id: "runx/spend",
-        version: "sha-e5fd2bc16a0f",
+        version: "sha-6599445d02b3",
         digest: "4b9810ee99bbbc58e467547595e0cdb7d67ad117f8cbba422b6e6e5e2b065fc5",
     },
     OfficialSkillLockEntry {

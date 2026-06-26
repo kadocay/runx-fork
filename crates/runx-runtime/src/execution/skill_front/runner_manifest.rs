@@ -1,9 +1,6 @@
 use super::{SkillRunError, invalid};
 #[cfg(feature = "cli-tool")]
-use super::{
-    contract_json_value, identifier_segment, seal_skill_output,
-    sealed_output,
-};
+use super::{contract_json_value, identifier_segment, seal_skill_output, sealed_output};
 
 use std::collections::BTreeMap;
 use std::fs;

@@ -552,8 +552,9 @@ fn diagnostic_instance_id(
     if let Some(evidence) = evidence {
         material.insert("evidence".to_owned(), JsonValue::Object(evidence.clone()));
     }
-    let canonical = canonical_stable_json(&JsonValue::Object(material))
-        .map_err(|source| RuntimeError::effect_state("canonicalizing doctor hash material", source))?;
+    let canonical = canonical_stable_json(&JsonValue::Object(material)).map_err(|source| {
+        RuntimeError::effect_state("canonicalizing doctor hash material", source)
+    })?;
     Ok(sha256_prefixed(canonical.as_bytes()))
 }
 
@@ -562,10 +563,7 @@ fn diagnostic_instance_id(
 /// serialized wire shape (which skips `None`).
 fn location_object(location: &DoctorLocation) -> JsonObject {
     let mut object: JsonObject = BTreeMap::new();
-    object.insert(
-        "path".to_owned(),
-        JsonValue::String(location.path.clone()),
-    );
+    object.insert("path".to_owned(), JsonValue::String(location.path.clone()));
     if let Some(json_pointer) = &location.json_pointer {
         object.insert(
             "json_pointer".to_owned(),

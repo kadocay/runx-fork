@@ -9,14 +9,15 @@ use crate::execution::output_projection::{
     StepOutputProjection, StepOutputRefs, project_step_output,
 };
 use crate::{RuntimeError, StepRun};
+use runx_contracts::fingerprint::sha256_hex;
 use runx_contracts::schema::NonEmptyString;
 use runx_contracts::{
-    ActForm, AuthorityAttenuation, AuthoritySubsetResult, AuthorityTerm, Closure, ClosureDisposition,
-    CredentialDeliveryObservation, CriterionBinding, CriterionStatus, Decision, DecisionChoice,
-    DecisionInputs, DecisionJustification, FanoutReceiptSyncPoint, Intent, JsonObject, Lineage,
-    RECEIPT_CANONICALIZATION, Receipt, ReceiptAct, ReceiptAuthority, ReceiptEnforcement,
-    ReceiptIdempotency, ReceiptIssuer, ReceiptSchema, Reference, ReferenceType, Seal,
-    SignatureAlgorithm, Subject, json_string_field, receipt_subject_kind,
+    ActForm, AuthorityAttenuation, AuthoritySubsetResult, AuthorityTerm, Closure,
+    ClosureDisposition, CredentialDeliveryObservation, CriterionBinding, CriterionStatus, Decision,
+    DecisionChoice, DecisionInputs, DecisionJustification, FanoutReceiptSyncPoint, Intent,
+    JsonObject, Lineage, RECEIPT_CANONICALIZATION, Receipt, ReceiptAct, ReceiptAuthority,
+    ReceiptEnforcement, ReceiptIdempotency, ReceiptIssuer, ReceiptSchema, Reference, ReferenceType,
+    Seal, SignatureAlgorithm, Subject, json_string_field, receipt_subject_kind,
 };
 use runx_receipts::{
     ReceiptProofContext, ReceiptProofContextProvider, ReceiptSignature, ReceiptTreeConfig,
@@ -614,7 +615,34 @@ fn subject(graph_name: &str, node_id: &str, kind: NonEmptyString) -> Subject {
     }
 }
 
+/// The stable identity of the local runtime's enforcement profile. The hash is
+/// derived over this id plus the profile's redaction/setup/teardown refs, never
+/// over [`ReceiptEnforcement`] itself (which carries the resulting hash).
+const RUNTIME_ENFORCEMENT_PROFILE_ID: &str = "runx.runtime.enforcement.profile.v1";
+
+/// Content-address an enforcement profile as `sha256:<digest>` over its stable
+/// id plus its redaction/setup/teardown ref inputs in deterministic order. Both
+/// runtime `ReceiptEnforcement` build sites (the generic `authority()` helper and
+/// the domain-act seal) call this so the profile hash has one source of truth.
+fn enforcement_profile_hash(
+    redaction_refs: &[Reference],
+    setup_refs: &[Reference],
+    teardown_refs: &[Reference],
+) -> NonEmptyString {
+    let identity = serde_json::json!({
+        "profile_id": RUNTIME_ENFORCEMENT_PROFILE_ID,
+        "redaction_refs": redaction_refs,
+        "setup_refs": setup_refs,
+        "teardown_refs": teardown_refs,
+    });
+    let canonical = serde_json::to_vec(&identity).unwrap_or_default();
+    format!("sha256:{}", sha256_hex(&canonical)).into()
+}
+
 fn authority(grant_refs: Vec<Reference>) -> ReceiptAuthority {
+    let redaction_refs = Vec::new();
+    let setup_refs = Vec::new();
+    let teardown_refs = Vec::new();
     ReceiptAuthority {
         actor_ref: Reference::runx(ReferenceType::Principal, "local_runtime"),
         authority_proof_refs: Vec::new(),
@@ -627,10 +655,10 @@ fn authority(grant_refs: Vec<Reference>) -> ReceiptAuthority {
         },
         mandate_ref: None,
         enforcement: ReceiptEnforcement {
-            profile_hash: "sha256:runtime-skeleton-enforcement".into(),
-            redaction_refs: Vec::new(),
-            setup_refs: Vec::new(),
-            teardown_refs: Vec::new(),
+            profile_hash: enforcement_profile_hash(&redaction_refs, &setup_refs, &teardown_refs),
+            redaction_refs,
+            setup_refs,
+            teardown_refs,
         },
     }
 }
@@ -750,6 +778,9 @@ pub(crate) fn domain_act_receipt(
         closure: Some(closure),
         artifact_refs: frame.artifact_refs.clone(),
     };
+    let redaction_refs = Vec::new();
+    let setup_refs = Vec::new();
+    let teardown_refs = Vec::new();
     let authority = ReceiptAuthority {
         actor_ref: frame.actor_ref,
         authority_proof_refs: Vec::new(),
@@ -762,10 +793,10 @@ pub(crate) fn domain_act_receipt(
         }),
         mandate_ref: None,
         enforcement: ReceiptEnforcement {
-            profile_hash: "sha256:runtime-skeleton-enforcement".into(),
-            redaction_refs: Vec::new(),
-            setup_refs: Vec::new(),
-            teardown_refs: Vec::new(),
+            profile_hash: enforcement_profile_hash(&redaction_refs, &setup_refs, &teardown_refs),
+            redaction_refs,
+            setup_refs,
+            teardown_refs,
         },
     };
     let seal = seal(

@@ -1364,10 +1364,7 @@ fn agent_task_output(
         stderr: if succeeded {
             String::new()
         } else {
-            format!(
-                "agent act closed with {}",
-                disposition.label()
-            )
+            format!("agent act closed with {}", disposition.label())
         },
         exit_code: succeeded.then_some(0),
         duration_ms: 0,
@@ -1533,6 +1530,9 @@ pub(super) fn approval_outputs(
     );
     if let Some(actor) = resolution.actor() {
         data.insert("actor".to_owned(), JsonValue::String(actor_name(actor)));
+    }
+    if let Some(reason) = resolution.reason() {
+        data.insert("reason".to_owned(), JsonValue::String(reason.to_owned()));
     }
 
     let mut packet = JsonObject::new();

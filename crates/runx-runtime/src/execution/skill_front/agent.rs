@@ -1,7 +1,7 @@
 use super::{
     SkillRunError, SkillRunOverrides, agent_invocation_source_type, agent_request,
-    answer_disposition, contract_json_value, domain_act_frame,
-    identifier_segment, invalid, needs_agent_output, read_answer, seal_skill_answer, sealed_output,
+    answer_disposition, contract_json_value, domain_act_frame, identifier_segment, invalid,
+    needs_agent_output, read_answer, seal_skill_answer, sealed_output,
 };
 
 use runx_contracts::{ClosureDisposition, JsonObject, JsonValue};
@@ -247,10 +247,7 @@ fn agent_skill_output(stdout: String, receipt: &runx_contracts::Receipt) -> Skil
         stderr: if succeeded {
             String::new()
         } else {
-            format!(
-                "agent act closed with {}",
-                receipt.seal.disposition.label()
-            )
+            format!("agent act closed with {}", receipt.seal.disposition.label())
         },
         exit_code: succeeded.then_some(0),
         duration_ms: 0,
