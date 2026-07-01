@@ -1255,7 +1255,9 @@ mod tests {
             .map_err(|error| io::Error::other(error.to_string()))?;
 
         // Tamper with the sealed body after signing.
-        let receipt_file = receipt_dir.join(format!("{}.json", receipt.id));
+        let receipt_file = LocalReceiptStore::new(&receipt_dir)
+            .receipt_path(&receipt.id)
+            .map_err(|error| io::Error::other(error.to_string()))?;
         let tampered = fs::read_to_string(&receipt_file)?
             .replace("production-verified", "production-tampered");
         fs::write(&receipt_file, tampered)?;

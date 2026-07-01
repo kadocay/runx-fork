@@ -397,13 +397,9 @@ fn history_does_not_double_list_paused_ledger_with_terminal_receipt()
 #[test]
 fn malformed_history_store_remains_typed_error() -> Result<(), Box<dyn std::error::Error>> {
     let temp = TestDir::new()?;
-    fs::create_dir_all(temp.path())?;
-    fs::write(
-        temp.path()
-            .join(format!("{}.json", valid_content_receipt_id())),
-        "{",
-    )?;
     let store = LocalReceiptStore::new(temp.path());
+    fs::create_dir_all(temp.path())?;
+    fs::write(store.receipt_path(&valid_content_receipt_id())?, "{")?;
 
     let result = list_local_history(
         &store,
@@ -722,7 +718,7 @@ fn json_object(value: serde_json::Value) -> Result<runx_contracts::JsonObject, i
 fn write_receipt_json(dir: &Path, receipt: &Receipt) -> Result<(), Box<dyn std::error::Error>> {
     fs::create_dir_all(dir)?;
     fs::write(
-        dir.join(format!("{}.json", receipt.id)),
+        LocalReceiptStore::new(dir).receipt_path(&receipt.id)?,
         serde_json::to_string(receipt)?,
     )?;
     Ok(())

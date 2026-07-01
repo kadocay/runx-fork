@@ -49,6 +49,10 @@ impl LocalReceiptStore {
         safe_receipt_store_projection(&self.root, workspace_base, project_runx_dir)
     }
 
+    pub fn receipt_path(&self, receipt_id: &str) -> Result<PathBuf, ReceiptStoreError> {
+        Ok(self.root.join(receipt_file_name(receipt_id)?))
+    }
+
     pub fn read_exact(&self, receipt_id: &str) -> Result<Receipt, ReceiptStoreError> {
         self.read_exact_with_policy(
             receipt_id,
@@ -61,9 +65,9 @@ impl LocalReceiptStore {
         receipt_id: &str,
         signature_policy: RuntimeReceiptSignaturePolicy<'_>,
     ) -> Result<Receipt, ReceiptStoreError> {
-        let file_name = receipt_file_name(receipt_id)?;
+        let file_path = self.receipt_path(receipt_id)?;
         self.ensure_store_dir()?;
-        read_receipt_file(&self.root.join(file_name), receipt_id, signature_policy)
+        read_receipt_file(&file_path, receipt_id, signature_policy)
     }
 
     pub fn write_receipt(&self, receipt: &Receipt) -> Result<(), ReceiptStoreError> {

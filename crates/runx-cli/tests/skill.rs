@@ -5,6 +5,7 @@ use std::process::Command;
 
 use base64::Engine;
 use ring::signature::KeyPair;
+use runx_runtime::LocalReceiptStore;
 use serde_json::json;
 
 const TEST_MANIFEST_KEY_ID: &str = "runx-registry-skill-test-key";
@@ -68,7 +69,11 @@ fn native_skill_pauses_and_resumes_with_run_id() -> Result<(), Box<dyn std::erro
     let receipt_id = resume_json["receipt_id"]
         .as_str()
         .ok_or("missing receipt_id")?;
-    assert!(receipt_dir.join(format!("{receipt_id}.json")).exists());
+    assert!(
+        LocalReceiptStore::new(&receipt_dir)
+            .receipt_path(receipt_id)?
+            .exists()
+    );
 
     Ok(())
 }

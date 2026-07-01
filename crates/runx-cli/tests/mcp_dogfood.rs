@@ -6,6 +6,7 @@ use std::sync::mpsc::{self, Receiver, RecvTimeoutError};
 use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+use runx_runtime::LocalReceiptStore;
 use serde_json::{Value, json};
 
 const MCP_INITIALIZE_TIMEOUT: Duration = Duration::from_secs(30);
@@ -88,8 +89,9 @@ fn mcp_native_binary_dogfoods_streaming_skill_calls_and_receipts()
     );
 
     assert_eq!(receipt_ids.len(), 6);
+    let receipt_store = LocalReceiptStore::new(receipt_dir.path());
     for receipt_id in receipt_ids {
-        let receipt_path = receipt_dir.path().join(format!("{receipt_id}.json"));
+        let receipt_path = receipt_store.receipt_path(&receipt_id)?;
         let receipt = read_json_file(&receipt_path)?;
         assert_eq!(
             path_text(&receipt, &["schema"])?,
