@@ -42,7 +42,6 @@ jobs:
           path: |
             node_modules/.cache/tsc
             .build
-            dist
           key: ${{ runner.os }}-oss-checks-${{ hashFiles('pnpm-lock.yaml', 'package.json', 'tsconfig*.json', 'packages/**/tsconfig.json', 'packages/**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-oss-checks-
@@ -80,7 +79,6 @@ jobs:
           path: |
             node_modules/.cache/tsc
             .build
-            dist
           key: ${{ runner.os }}-oss-checks-${{ hashFiles('pnpm-lock.yaml', 'package.json', 'tsconfig*.json', 'packages/**/tsconfig.json', 'packages/**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-oss-checks-
