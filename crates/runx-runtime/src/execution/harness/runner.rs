@@ -65,6 +65,18 @@ pub enum HarnessReplayError {
         expected: String,
         actual: String,
     },
+    #[error(
+        "{message}; receipt={receipt_id}; disposition={disposition}; reason={reason_code}; summary={summary}; skill_stdout={skill_stdout}; skill_stderr={skill_stderr}"
+    )]
+    ExpectationFailed {
+        message: String,
+        receipt_id: String,
+        disposition: String,
+        reason_code: String,
+        summary: String,
+        skill_stdout: String,
+        skill_stderr: String,
+    },
     #[error("receipt digest failed: {message}")]
     ReceiptDigest { message: String },
     #[error("receipt proof failed for {receipt_id}: {findings}")]
@@ -188,8 +200,41 @@ where
             });
         }
     };
-    assert_expectations(&output, receipt_signature.signature_policy())?;
+    assert_expectations(&output, receipt_signature.signature_policy())
+        .map_err(|error| expectation_error_with_output(error, &output))?;
     Ok(output)
+}
+
+fn expectation_error_with_output(
+    error: HarnessReplayError,
+    output: &HarnessReplayOutput,
+) -> HarnessReplayError {
+    HarnessReplayError::ExpectationFailed {
+        message: error.to_string(),
+        receipt_id: output.receipt.id.to_string(),
+        disposition: format!("{:?}", output.receipt.seal.disposition),
+        reason_code: output.receipt.seal.reason_code.to_string(),
+        summary: truncate_diagnostic(&output.receipt.seal.summary),
+        skill_stdout: output
+            .skill_output
+            .as_ref()
+            .map(|skill_output| truncate_diagnostic(&skill_output.stdout))
+            .unwrap_or_default(),
+        skill_stderr: output
+            .skill_output
+            .as_ref()
+            .map(|skill_output| truncate_diagnostic(&skill_output.stderr))
+            .unwrap_or_default(),
+    }
+}
+
+fn truncate_diagnostic(value: &str) -> String {
+    const LIMIT: usize = 800;
+    let trimmed = value.trim();
+    if trimmed.len() <= LIMIT {
+        return trimmed.to_owned();
+    }
+    format!("{}...[truncated]", &trimmed[..LIMIT])
 }
 
 fn run_agent_task_fixture(
