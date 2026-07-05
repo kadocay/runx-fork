@@ -9,7 +9,10 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 const cliVersion = process.env.RUNX_SMOKE_RELEASE_VERSION?.trim() || await readCliVersion();
-const registryBaseUrl = normalizeBaseUrl(process.env.RUNX_SMOKE_REGISTRY_BASE_URL, "https://runx.ai");
+const registryBaseUrl = normalizeBaseUrl(
+  process.env.RUNX_SMOKE_REGISTRY_BASE_URL,
+  "https://api.runx.ai",
+);
 const skillId = process.env.RUNX_SMOKE_SKILL_ID?.trim() || "runx/sourcey";
 const smokeInstallationId = process.env.RUNX_SMOKE_INSTALLATION_ID?.trim() || "inst_release_smoke";
 
@@ -46,10 +49,16 @@ try {
     { mode: 0o600 },
   );
 
-  const search = await runRunx(cliBin, ["skill", "search", name, "--registry", registryBaseUrl, "--json"], tempDir, homeDir);
+  const search = await runRunx(
+    cliBin,
+    ["registry", "search", name, "--registry", registryBaseUrl, "--json"],
+    tempDir,
+    homeDir,
+  );
   const parsedSearch = JSON.parse(search.stdout);
-  const runxSearch = parsedSearch.results?.find((entry) => entry?.skill_id === skillId);
-  if (!runxSearch || runxSearch.source !== "runx-registry") {
+  const searchSource = parsedSearch.registry?.source;
+  const runxSearch = parsedSearch.registry?.results?.find((entry) => entry?.skill_id === skillId);
+  if (!runxSearch || searchSource !== "remote") {
     throw new Error(`Released CLI did not return ${skillId} as a remote registry result.`);
   }
 
@@ -60,7 +69,13 @@ try {
     homeDir,
   );
   const firstParsed = JSON.parse(firstInstall.stdout);
-  if (firstParsed.install?.skill_id !== skillId || firstParsed.install?.source !== "runx-registry") {
+  const firstRegistry = firstParsed.registry;
+  const firstInstallPayload = firstRegistry?.install;
+  if (
+    firstRegistry?.source !== "remote"
+    || firstInstallPayload?.skill_id !== skillId
+    || firstInstallPayload?.source !== "runx-registry"
+  ) {
     throw new Error(`First released CLI install returned an unexpected payload for ${skillId}.`);
   }
 
@@ -73,7 +88,8 @@ try {
     homeDir,
   );
   const secondParsed = JSON.parse(secondInstall.stdout);
-  if (!["installed", "unchanged"].includes(String(secondParsed.install?.status))) {
+  const secondInstallPayload = secondParsed.registry?.install;
+  if (!["installed", "unchanged"].includes(String(secondInstallPayload?.status))) {
     throw new Error(`Second released CLI install returned an unexpected status for ${skillId}.`);
   }
 
@@ -99,8 +115,8 @@ try {
       after_second: afterCount,
     },
     search: runxSearch,
-    first_install: firstParsed.install,
-    second_install: secondParsed.install,
+    first_install: firstInstallPayload,
+    second_install: secondInstallPayload,
   }, null, 2)}\n`);
 } finally {
   await rm(tempDir, { recursive: true, force: true });
