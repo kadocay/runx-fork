@@ -558,7 +558,7 @@ jobs:
         if: steps.gate.outputs.publish == 'true'
         uses: michidk/winget-updater@latest
         with:
-          token: ${{ secrets.WINGET_TOKEN }}
+          komac-token: ${{ secrets.WINGET_TOKEN }}
           identifier: runxhq.runx
           version: ${{ needs.prepare.outputs.version }}
           url: "https://github.com/${{ github.repository }}/releases/download/cli-v${{ needs.prepare.outputs.version }}/runx-${{ needs.prepare.outputs.version }}-x86_64-pc-windows-msvc.zip"
