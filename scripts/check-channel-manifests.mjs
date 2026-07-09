@@ -41,6 +41,16 @@ expectEqual("scoop autoupdate extract_dir", scoop.autoupdate?.architecture?.["64
 
 const winget = readFileSync(path.join(options.channels, "winget", "runx.yaml"), "utf8");
 expectIncludes("winget RelativeFilePath", winget, `RelativeFilePath: ${winStem}\\runx.exe`);
+expectIncludes(
+  "winget installer-scoped NestedInstallerFiles",
+  winget,
+  [
+    "Installers:",
+    "  - Architecture: x64",
+    "    NestedInstallerFiles:",
+    `      - RelativeFilePath: ${winStem}\\runx.exe`,
+  ].join("\n"),
+);
 
 const aur = readFileSync(path.join(options.channels, "aur", "PKGBUILD"), "utf8");
 expectIncludes("aur x86_64 package path", aur, `runx-\${pkgver}-\${target}/runx`);

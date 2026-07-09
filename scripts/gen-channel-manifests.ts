@@ -149,11 +149,11 @@ ShortDescription: ${m.description}
 PackageUrl: ${m.homepage}
 InstallerType: zip
 NestedInstallerType: portable
-NestedInstallerFiles:
-  - RelativeFilePath: ${windowsBinaryPath(m, TARGETS.winX64)}
-    PortableCommandAlias: runx
 Installers:
   - Architecture: x64
+    NestedInstallerFiles:
+      - RelativeFilePath: ${windowsBinaryPath(m, TARGETS.winX64)}
+        PortableCommandAlias: runx
     InstallerUrl: ${archiveUrl(m, TARGETS.winX64)}
     InstallerSha256: ${artifact(m, TARGETS.winX64).sha256.toUpperCase()}
 ManifestType: singleton
