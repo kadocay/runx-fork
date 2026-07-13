@@ -597,11 +597,28 @@ fn native_skill_run_uses_local_development_without_production_receipt_signing_en
 -> Result<(), Box<dyn std::error::Error>> {
     let temp = tempdir()?;
     let skill_dir = write_agent_task_skill(temp.path())?;
+    let answers_path = temp.path().join("answers.json");
+    fs::write(
+        &answers_path,
+        serde_json::json!({
+            "answers": {
+                "agent_task.issue-intake.output": {
+                    "intake_report": {
+                        "summary": "Docs bug is bounded."
+                    },
+                    "closure": {
+                        "disposition": "closed"
+                    }
+                }
+            }
+        })
+        .to_string(),
+    )?;
     let result = LocalOrchestrator::default().run_skill(&SkillRunRequest {
         skill_path: skill_dir,
         receipt_dir: None,
-        run_id: None,
-        answers_path: None,
+        run_id: Some("local-development-signed-run".to_owned()),
+        answers_path: Some(answers_path),
         inputs: BTreeMap::new(),
         env: BTreeMap::new(),
         cwd: temp.path().to_path_buf(),
