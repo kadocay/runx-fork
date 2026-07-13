@@ -254,7 +254,9 @@ pub enum ExternalAdapterSupervisorError {
         timeout_ms: u64,
         cancellation: Box<ExternalAdapterCancellationFrame>,
     },
-    #[error("external adapter process exited before returning an accepted response: {exit_status}: {stderr}")]
+    #[error(
+        "external adapter process exited before returning an accepted response: {exit_status}: {stderr}"
+    )]
     ProcessFailed { exit_status: String, stderr: String },
     #[error("external adapter process returned no stdout response")]
     EmptyResponse,
@@ -332,10 +334,8 @@ impl ExternalAdapterProcessSupervisor {
         if !status.success() {
             return Err(ExternalAdapterSupervisorError::ProcessFailed {
                 exit_status: status.to_string(),
-                stderr: credential_delivery.redact_bytes_to_string(
-                    stderr.bytes,
-                    RESPONSE_LIMIT_BYTES,
-                ),
+                stderr: credential_delivery
+                    .redact_bytes_to_string(stderr.bytes, RESPONSE_LIMIT_BYTES),
             });
         }
         if stdout.truncated {
@@ -968,12 +968,18 @@ fn external_adapter_cwd_policy(
 fn process_env(
     invocation: &ExternalAdapterInvocation,
 ) -> Result<BTreeMap<String, String>, ExternalAdapterSupervisorError> {
-    let mut env = ["PATH", "SystemRoot", "PATHEXT", "HOME", "TMPDIR", "TMP", "TEMP"]
-        .into_iter()
-        .filter_map(|key| {
-            crate::services::process_env_value(key).map(|value| (key.to_owned(), value))
-        })
-        .collect::<BTreeMap<_, _>>();
+    let mut env = [
+        "PATH",
+        "SystemRoot",
+        "PATHEXT",
+        "HOME",
+        "TMPDIR",
+        "TMP",
+        "TEMP",
+    ]
+    .into_iter()
+    .filter_map(|key| crate::services::process_env_value(key).map(|value| (key.to_owned(), value)))
+    .collect::<BTreeMap<_, _>>();
     if let Some(scoped_env) = invocation.env.as_ref() {
         for (key, value) in scoped_env {
             let JsonValue::String(value) = value else {
