@@ -27,7 +27,6 @@ if (options.dryRun) {
 const user = await api("GET", "/user");
 const forkOwner = user.login;
 await ensureFork(forkOwner);
-await syncForkBase(forkOwner);
 
 const baseRef = await api("GET", `/repos/${options.upstream}/git/ref/heads/${options.base}`);
 await resetBranch(forkOwner, branchName, baseRef.object.sha);
@@ -59,14 +58,6 @@ async function ensureFork(owner) {
     await sleep(2000);
   }
   throw new Error(`fork ${owner}/winget-pkgs was not ready after creation`);
-}
-
-// The version branch is cut from upstream, so the fork's own base branch must
-// track upstream too. If it lags, the fork's CI diffs the branch against a stale
-// base, treats every upstream commit since as ours, and reports failures for
-// files the release never touched.
-async function syncForkBase(owner) {
-  await api("POST", `/repos/${owner}/winget-pkgs/merge-upstream`, { branch: options.base });
 }
 
 async function resetBranch(owner, branch, sha) {
