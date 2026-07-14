@@ -1,0 +1,12 @@
+skill: overlay-open-skill-1
+version: "1.0.0"
+catalog:
+  kind: skill
+  audience: public
+  visibility: public
+  role: canonical
+runners:
+  default:
+    default: true
+    type: agent
+    timeout_seconds: 300
