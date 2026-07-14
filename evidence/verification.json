@@ -1,0 +1,35 @@
+{
+  "verification": {
+    "upstream_skill": {
+      "name": "find-skills",
+      "repo": "vercel-labs/skills",
+      "ref": "https://raw.githubusercontent.com/vercel-labs/skills/main/skills/find-skills/SKILL.md",
+      "license": "MIT"
+    },
+    "pinned_digest": {
+      "algorithm": "sha256",
+      "value": "c00eeea0e13e74fe4a9d84ba0a8542205a1b736d65f13134fe1a6647eb14976f",
+      "recomputed": "c00eeea0e13e74fe4a9d84ba0a8542205a1b736d65f13134fe1a6647eb14976f",
+      "match": true
+    },
+    "scope": {
+      "allowed": ["search_skills", "install_skills", "list_skills"],
+      "disallowed": ["publish_skills", "modify_repo", "write_disk_outside_skills_dir"]
+    },
+    "allowed_tools": ["filesystem.read", "filesystem.write", "web.fetch", "terminal.exec", "skills.list"],
+    "digest_stale_behavior": "refuse",
+    "harness": {
+      "cases": 2,
+      "names": ["ecosystem-query-pass", "digest-stale-refusal"],
+      "status": "needs_agent (agent runtime type)"
+    },
+    "registry_publish": {
+      "status": "success",
+      "location": "kadocay/overlay-open-skill-1@1.0.0"
+    },
+    "pr": {
+      "number": 327,
+      "status": "open"
+    }
+  }
+}

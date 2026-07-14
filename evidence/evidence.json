@@ -1,0 +1,15 @@
+{
+  "summary": "Completed overlay-open-skill-1 for Frantic bounty #100. All 9 required artifacts delivered.",
+  "observations": [
+    "SKILL.md created with runx frontmatter (overlay metadata, scopes, allowed_tools, pinned digest)",
+    "X.yaml created with agent runner type and 2 harness cases",
+    "Published to api.runx.ai as kadocay/overlay-open-skill-1@1.0.0",
+    "PR #327 opened to runxhq/runx (https://github.com/runxhq/runx/pull/327)",
+    "Upstream: vercel-labs/skills/skills/find-skills/SKILL.md (MIT license)",
+    "Pinned digest: sha256:c00eeea0e13e74fe4a9d84ba0a8542205a1b736d65f13134fe1a6647eb14976f",
+    "Scope: search_skills, install_skills, list_skills only",
+    "Allowed tools: filesystem.read, filesystem.write, web.fetch, terminal.exec, skills.list (5 refs with namespace prefixes)",
+    "Digest stale behavior: refuse (upstream drift blocks execution)",
+    "Verifier: runx harness reports 2 cases with needs_agent status (expected for agent-type runner)"
+  ]
+}
