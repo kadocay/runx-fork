@@ -13,14 +13,31 @@
       "match": true
     },
     "scope": {
-      "allowed": ["search_skills", "install_skills", "list_skills"],
-      "disallowed": ["publish_skills", "modify_repo", "write_disk_outside_skills_dir"]
+      "allowed": [
+        "search_skills",
+        "install_skills",
+        "list_skills"
+      ],
+      "disallowed": [
+        "publish_skills",
+        "modify_repo",
+        "write_disk_outside_skills_dir"
+      ]
     },
-    "allowed_tools": ["filesystem.read", "filesystem.write", "web.fetch", "terminal.exec", "skills.list"],
+    "allowed_tools": [
+      "filesystem.read",
+      "filesystem.write",
+      "web.fetch",
+      "terminal.exec",
+      "skills.list"
+    ],
     "digest_stale_behavior": "refuse",
     "harness": {
       "cases": 2,
-      "names": ["ecosystem-query-pass", "digest-stale-refusal"],
+      "names": [
+        "ecosystem-query-pass",
+        "digest-stale-refusal"
+      ],
       "status": "needs_agent (agent runtime type)"
     },
     "registry_publish": {
@@ -30,6 +47,8 @@
     "pr": {
       "number": 327,
       "status": "open"
-    }
-  }
+    },
+    "runx_cli_version": "0.7.1"
+  },
+  "runx_cli_version": "0.7.1"
 }

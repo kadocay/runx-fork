@@ -1,6 +1,7 @@
 ---
 name: overlay-open-skill-1
 description: Governed overlay for find-skills from the open skill ecosystem.
+runx_cli_version: 0.7.1
 runx:
   category: authoring
   allowed_tools:
