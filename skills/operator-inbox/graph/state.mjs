@@ -62,16 +62,12 @@ export function planTransition(input) {
   const idempotencyKey = operation === "scan_page"
     ? `operator-inbox:scan:${event.payload.scan.scan_id}:${event.payload.scan.page_index}:${eventDigest.slice(7, 31)}`
     : `operator-inbox:disposition:${event.payload.disposition.thread_locator}:${eventDigest.slice(7, 31)}`;
-  const next = clone(state);
-  applyDomainEvent(next, event);
-  next.version = expectedVersion + 1;
   return {
     effect_family: "operator-inbox",
     operation,
     expected_version: expectedVersion,
     idempotency_key: idempotencyKey,
     event,
-    projection: next,
   };
 }
 

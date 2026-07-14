@@ -54,8 +54,7 @@ describe("operator-inbox skill", () => {
         evidence_url: "https://example.com/sending-at-scale",
       },
     });
-    expect(resolved.projection).not.toHaveProperty("page");
-    projection = fold(resolved.projection, 2, 2, []);
+    projection = fold(projection, 1, 2, [eventRecord(2, resolved.event)]);
 
     const oldHistory = planScan(projection, 2, "scan-2", message({
       messageLocator: "slack://workspace/analytics/99.9",
@@ -63,28 +62,31 @@ describe("operator-inbox skill", () => {
       authorId: "george",
       preview: "An older reminder",
     }));
-    expect(oldHistory.projection.items[0]).toMatchObject({
+    projection = fold(projection, 2, 3, [eventRecord(3, oldHistory.event)]);
+    expect(projection.items[0]).toMatchObject({
       status: "resolved",
       disposition: { actor: "Kam", reason: "Addressed in the sending-at-scale article" },
     });
 
-    const ownReply = planScan(oldHistory.projection, 3, "scan-3", message({
+    const ownReply = planScan(projection, 3, "scan-3", message({
       messageLocator: "slack://workspace/analytics/101.1",
       occurredAt: "2026-07-14T10:30:00.000Z",
       authorId: "operator-1",
       authorName: "Kam",
       preview: "I followed this up",
     }));
-    expect(ownReply.projection.items[0].status).toBe("resolved");
+    projection = fold(projection, 3, 4, [eventRecord(4, ownReply.event)]);
+    expect(projection.items[0].status).toBe("resolved");
 
-    const newerExternal = planScan(ownReply.projection, 4, "scan-4", message({
+    const newerExternal = planScan(projection, 4, "scan-4", message({
       messageLocator: "slack://workspace/analytics/102.1",
       occurredAt: "2026-07-14T09:30:00.000Z",
       authorId: "nick",
       authorName: "Nick",
       preview: "An unseen follow-up arrived before the disposition",
     }));
-    expect(newerExternal.projection.items[0]).toMatchObject({
+    projection = fold(projection, 4, 5, [eventRecord(5, newerExternal.event)]);
+    expect(projection.items[0]).toMatchObject({
       status: "open",
       requester: { external_id: "george", display_name: "George" },
       latest_message: {
@@ -269,5 +271,4 @@ type Message = Record<string, unknown>;
 
 type Transition = {
   readonly event: Record<string, unknown>;
-  readonly projection: Projection;
 };
