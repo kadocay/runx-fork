@@ -5,10 +5,6 @@ catalog:
   audience: operator
   visibility: public
   role: canonical
-runners:
-  default:
-    default: true
-    type: skill
 harness:
   cases:
     - name: consistent-incident-seal
