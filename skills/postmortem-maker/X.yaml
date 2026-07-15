@@ -1,17 +1,13 @@
 skill: postmortem-maker
 version: "1.0.0"
+
 catalog:
   kind: skill
   audience: operator
   visibility: public
   role: canonical
-runners:
-  default:
-    default: true
-    type: cli-tool
-  append_and_readback:
-    default: false
-    type: cli-tool
+  runtime_path: postmortem
+
 harness:
   cases:
     - name: consistent-incident-seal
