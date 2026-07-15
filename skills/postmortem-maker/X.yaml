@@ -1,0 +1,40 @@
+skill: postmortem-maker
+version: "1.0.0"
+
+catalog:
+  kind: skill
+  audience: operator
+  visibility: public
+  role: canonical
+  runtime_path: postmortem
+
+harness:
+  cases:
+    - name: consistent-incident-seal
+      description: Consistent incident evidence yields postmortem + publish
+      input:
+        source: "https://status.vercel.com/incidents/abc123"
+        postmortem_policy: "standard"
+      expected:
+        status: sealed
+        output:
+          postmortem:
+            status: published
+          action_items:
+            min_count: 2
+          unknowns:
+            type: array
+
+    - name: digest-stale-refusal
+      description: Conflicting evidence yields unknowns, refuses publish
+      input:
+        source: "https://status.vercel.com/incidents/conflicting"
+        postmortem_policy: "standard"
+      expected:
+        status: refused
+        error_contains: runx.overlay.digest.stale
+        output:
+          postmortem:
+            status: draft
+          unknowns:
+            min_count: 1

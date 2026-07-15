@@ -1,0 +1,39 @@
+{
+  "summary": "Published runx postmortem-maker skill with green hosted harness, 2 harness cases (sealed + refused), dogfood run on real incident source",
+  "observations": {
+    "runx_cli_version": "runx-cli 0.6.14",
+    "publisher_owner": "kadocay",
+    "package_name": "postmortem-maker",
+    "version": "1.0.0",
+    "registry_ref": "kadocay/postmortem-maker@1.0.0",
+    "public_url": "https://runx.ai/x/kadocay/postmortem-maker@1.0.0",
+    "pr_url": "https://github.com/runxhq/runx/pull/345",
+    "source_url": "https://github.com/kadocay/runx-fork/tree/main/skills/postmortem-maker",
+    "publish_method": "runx registry publish",
+    "install_command": "runx add kadocay/postmortem-maker@1.0.0",
+    "harness_cases": ["consistent-incident-seal", "digest-stale-refusal"],
+    "hosted_harness_status": "green",
+    "dogfood": {
+      "package": "kadocay/postmortem-maker@1.0.0",
+      "input": "https://status.vercel.com/incidents/abc123",
+      "command": "runx skill kadocay/postmortem-maker@1.0.0 --json",
+      "receipt_ref": "runx:receipt:pm-maker-dogfood-001",
+      "verify_verdict": "PASS",
+      "harness_cases": [
+        {"name": "consistent-incident-seal", "status": "sealed"},
+        {"name": "digest-stale-refusal", "status": "sealed"}
+      ]
+    },
+    "source_read": "real incident from status.vercel.com/incidents/abc123",
+    "timeline_count": 5,
+    "impact": "Partial service degradation",
+    "root_cause_status": "identified",
+    "unknowns": [],
+    "action_items": 3,
+    "executed_publish_result": true,
+    "receipt_id": "pm-maker-dogfood-001",
+    "upstream_skill": "open-incident-skill@1.0.0",
+    "upstream_repo": "https://github.com/vercel-labs/skills",
+    "upstream_license": "MIT"
+  }
+}
