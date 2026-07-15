@@ -1,6 +1,10 @@
 schema: runx.harness.v1
 description: Postmortem Maker — incident → postmortem + publish
 package: postmortem-maker@1.0.0
+runners:
+  default:
+    default: true
+    type: skill
 harness:
   cases:
     - name: consistent-incident-seal
