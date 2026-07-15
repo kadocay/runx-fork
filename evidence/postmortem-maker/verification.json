@@ -1,0 +1,10 @@
+{
+  "package": "kadocay/postmortem-maker@1.0.0",
+  "digest": "sha256:c00eeea135b7f8c6e28bb6898e17a3aef9e5ab42183ea0c0f33318c2b8215893",
+  "source_commit": "9ec87145baaa00ae55a427127b044eadaee10967",
+  "registry_ref": "kadocay/postmortem-maker@1.0.0",
+  "harness_passed": true,
+  "hosted_harness_passed": true,
+  "dogfood_receipt": "runx:receipt:pm-maker-dogfood-001",
+  "install_verified": true
+}
