@@ -1,6 +1,10 @@
-schema: runx.harness.v1
-description: Postmortem Maker — incident → postmortem + publish
-package: postmortem-maker@1.0.0
+skill: postmortem-maker
+version: "1.0.0"
+catalog:
+  kind: skill
+  audience: operator
+  visibility: public
+  role: canonical
 runners:
   default:
     default: true
